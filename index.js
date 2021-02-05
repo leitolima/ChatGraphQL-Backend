@@ -2,9 +2,11 @@ const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const connectDB = require('./config/db');
 require('dotenv').config();
 
 const app = express();
+connectDB();
 
 const typeDefs = gql`
     type Query {
