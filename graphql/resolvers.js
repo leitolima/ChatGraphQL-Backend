@@ -26,7 +26,7 @@ const resolvers = {
         logIn: async (_, { input }, { res }) => {
             console.log('=> logIn');
             const { username, password } = input;
-            const auth = await User.findOne({ username });
+            const auth = await User.findOne({ username }).populate('channels');
             if(!auth){
                 throw new Error('Username or password incorrect.');
             }
