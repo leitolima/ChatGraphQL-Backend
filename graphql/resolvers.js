@@ -19,6 +19,15 @@ const resolvers = {
             } catch (err){
                 throw new Error('Invalid token.');
             }
+        },
+        getChannel: async (_, { id }) => {
+            console.log('=> getChannel');
+            try{
+                const channel = await Channel.findById(id).populate('creator');
+                return channel;
+            } catch(err){
+                throw new Error('This channel not exists.');
+            }
         }
     },
 
@@ -63,6 +72,7 @@ const resolvers = {
             const id = getIdUserAutenticated(req);
             const channel = new Channel(input);
             channel.creator = id;
+            channel.members.push(id);
             channel.save();
             const { _id: channelId } = channel;
             const user = await User.findOne({_id: id});

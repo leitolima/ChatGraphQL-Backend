@@ -41,7 +41,7 @@ const typeDefs = gql`
 
     type Query{
         getUser: User
-        getChannel(input: ID): Channel
+        getChannel(id: ID): Channel
     }
     
     type Mutation {
