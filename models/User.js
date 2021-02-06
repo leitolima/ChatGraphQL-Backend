@@ -22,6 +22,11 @@ const UserSchema = new Schema({
         type: String,
         default: 'https://res.cloudinary.com/dspswtipv/image/upload/v1608780067/cihpcvkxc20fmniyltnq.png'
     },
+    channels: [{
+        type: Schema.Types.ObjectId,
+        ref: 'channels',
+        default: []
+    }],
     created: {
         type: Date,
         default: Date.now()     

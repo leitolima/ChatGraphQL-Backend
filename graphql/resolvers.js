@@ -1,14 +1,20 @@
 const User = require('../models/User');
+const Channel = require('../models/Channel');
 const jwt = require('jsonwebtoken');
+
+const getIdUserAutenticated = req => {
+    const { reactchat } = req.cookies;
+    const { id } = jwt.verify(reactchat, process.env.SECRET_JWT);
+    return id
+}
 
 const resolvers = {
     Query: {
         getUser: async (_, args, { req }) => {
             console.log('=> getUser');
-            const { reactchat } = req.cookies;
             try{
-                const { id } = await jwt.verify(reactchat, process.env.SECRET_JWT);
-                const user = await User.findById(id);
+                const id = getIdUserAutenticated(req);
+                const user = await User.findById(id).populate('channels');
                 return user;
             } catch (err){
                 throw new Error('Invalid token.');
@@ -51,6 +57,18 @@ const resolvers = {
                 maxAge: 1000 * 60 * 60 * 24 // 1 day
             });
             return true;
+        },
+        createNewChannel: async (_, { input }, { req }) => {
+            console.log('=> createNewChannel');
+            const id = getIdUserAutenticated(req);
+            const channel = new Channel(input);
+            channel.creator = id;
+            channel.save();
+            const { _id: channelId } = channel;
+            const user = await User.findOne({_id: id});
+            user.channels.push(channelId);
+            user.save();
+            return channel;
         }
     }
 }

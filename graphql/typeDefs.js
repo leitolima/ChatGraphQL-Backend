@@ -7,7 +7,8 @@ const typeDefs = gql`
         name: String
         lastname: String
         username: String
-        image: String
+        image: String,
+        channels: [Channel]
     }
 
     type Message{
@@ -40,6 +41,7 @@ const typeDefs = gql`
 
     type Query{
         getUser: User
+        getChannel(input: ID): Channel
     }
     
     type Mutation {
