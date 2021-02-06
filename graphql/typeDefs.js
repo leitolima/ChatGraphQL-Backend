@@ -10,11 +10,32 @@ const typeDefs = gql`
         image: String
     }
 
+    type Message{
+        id: ID
+        user: [User]
+        text: String
+        media: String
+    }
+
+    type Channel{
+        id: ID
+        name: String
+        description: String
+        creator: User
+        members: [User]
+        messages: [Message]
+    }
+
     input UserInput{
         name: String
         lastname: String
         username: String
         password: String
+    }
+
+    input ChannelInput{
+        name: String
+        description: String
     }
 
     type Query{
@@ -24,6 +45,7 @@ const typeDefs = gql`
     type Mutation {
         logIn(input: UserInput): User
         createNewUser(input: UserInput): Boolean
+        createNewChannel(input: ChannelInput): Channel
     }
 `;
 
