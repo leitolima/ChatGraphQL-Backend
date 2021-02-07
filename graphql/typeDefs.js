@@ -13,7 +13,7 @@ const typeDefs = gql`
 
     type Message{
         id: ID
-        user: [User]
+        user: User
         text: String
         media: String
     }
@@ -42,6 +42,7 @@ const typeDefs = gql`
     type Query{
         getUser: User
         getChannel(id: ID): Channel
+        getMessages(id: ID): [Message]
     }
     
     type Mutation {

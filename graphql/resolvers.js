@@ -24,10 +24,19 @@ const resolvers = {
         getChannel: async (_, { id }) => {
             console.log('=> getChannel');
             try{
-                const channel = await Channel.findById(id).populate('creator');
+                const channel = await Channel.findById(id).populate('creator members');
                 return channel;
             } catch(err){
                 throw new Error('This channel not exists.');
+            }
+        },
+        getMessages: async(_, { id }) => {
+            console.log('=> getMessages');
+            try{
+                const messages = await Message.find({channel: id}).populate('user');
+                return messages
+            } catch(err){
+                throw new Error('Unexpected error');
             }
         }
     },
@@ -92,6 +101,7 @@ const resolvers = {
             });
             message.save();
             channel.messages.push(message._id);
+            channel.save();
             await message.populate('user', 'username image').execPopulate();
             return message;
         }
