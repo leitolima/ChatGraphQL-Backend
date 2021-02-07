@@ -48,6 +48,7 @@ const typeDefs = gql`
         logIn(input: UserInput): User
         createNewUser(input: UserInput): Boolean
         createNewChannel(input: ChannelInput): Channel
+        sendNewMessage(input: String, id: ID): Message
     }
 `;
 

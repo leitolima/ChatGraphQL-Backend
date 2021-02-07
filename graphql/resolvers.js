@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Channel = require('../models/Channel');
+const Message = require('../models/Message');
 const jwt = require('jsonwebtoken');
 
 const getIdUserAutenticated = req => {
@@ -79,6 +80,20 @@ const resolvers = {
             user.channels.push(channelId);
             user.save();
             return channel;
+        },
+        sendNewMessage: async (_, { input, id: channel_id }, { req }) => {
+            console.log('=> sendNewMessage');
+            const id = getIdUserAutenticated(req);
+            var channel = await Channel.findOne({_id: channel_id});
+            const message = new Message({
+                user: id,
+                channel: channel_id,
+                text: input
+            });
+            message.save();
+            channel.messages.push(message._id);
+            await message.populate('user', 'username image').execPopulate();
+            return message;
         }
     }
 }
