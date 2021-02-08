@@ -50,6 +50,7 @@ const typeDefs = gql`
         createNewUser(input: UserInput): Boolean
         createNewChannel(input: ChannelInput): Channel
         sendNewMessage(input: String, id: ID): Message
+        joinToChannel(id: ID): Channel
     }
 `;
 

@@ -104,6 +104,17 @@ const resolvers = {
             channel.save();
             await message.populate('user', 'username image').execPopulate();
             return message;
+        },
+        joinToChannel: async (_, { id: channel_id }, { req }) => {
+            console.log('=> joinToChannel');
+            const id = getIdUserAutenticated(req);
+            var user = await User.findOne({_id: id});
+            var channel = await Channel.findOne({_id: channel_id});
+            channel.members.push(id);
+            channel.save();
+            user.channels.push(channel._id);
+            user.save();
+            return channel;
         }
     }
 }
