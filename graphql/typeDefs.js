@@ -52,6 +52,10 @@ const typeDefs = gql`
         sendNewMessage(input: String, id: ID): Message
         joinToChannel(id: ID): Channel
     }
+
+    type Subscription {
+        newMessage: Message
+    }
 `;
 
 module.exports = typeDefs;

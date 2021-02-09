@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Channel = require('../models/Channel');
 const Message = require('../models/Message');
 const jwt = require('jsonwebtoken');
+const pubsub = require('../pubsub');
 
 const getIdUserAutenticated = req => {
     const { reactchat } = req.cookies;
@@ -102,7 +103,10 @@ const resolvers = {
             message.save();
             channel.messages.push(message._id);
             channel.save();
-            await message.populate('user', 'username image').execPopulate();
+            await message.populate('user', 'username image').execPopulate();        
+            pubsub.publish('MESSAGE_SENT', {
+                newMessage: message
+            });
             return message;
         },
         joinToChannel: async (_, { id: channel_id }, { req }) => {
@@ -116,7 +120,12 @@ const resolvers = {
             user.save();
             return channel;
         }
-    }
+    },
+    Subscription: {
+        newMessage: {
+            subscribe: () => pubsub.asyncIterator(['MESSAGE_SENT'])
+        },
+    },
 }
 
 module.exports = resolvers;

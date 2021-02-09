@@ -5,6 +5,7 @@ const resolvers = require('./graphql/resolvers');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const http = require("http");
 
 const connectDB = require('./config/db');
 require('dotenv').config();
@@ -22,16 +23,16 @@ const corsOptions = {
 //Middlewares
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use((req, res, next) => {
-    //Checks for token in cookies and adds userId to the requests
-    const { reactchat } = req.cookies;
-    if (reactchat) {
-        const { id } = jwt.verify(reactchat, process.env.SECRET_JWT);
-        req.userId = id;
-        // console.log('An UserId variable was created in the Req object.');
-    } 
-    next();
-});
+// app.use((req, res, next) => {
+//     //Checks for token in cookies and adds userId to the requests
+//     const { reactchat } = req.cookies;
+//     if (reactchat) {
+//         const { id } = jwt.verify(reactchat, process.env.SECRET_JWT);
+//         req.userId = id;
+//         console.log('An UserId variable was created in the Req object.');
+//     } 
+//     next();
+// });
 
 const server = new ApolloServer({
     typeDefs,
@@ -41,6 +42,9 @@ const server = new ApolloServer({
 
 server.applyMiddleware({app, path: '/graphql', cors: false});
 
-app.listen({port: process.env.PORT || 4000}, () => {
+const httpServer = http.createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
+httpServer.listen({port: process.env.PORT || 4000}, () => {
     console.log(`Server running on PORT ${process.env.PORT || 4000}`);
 })
