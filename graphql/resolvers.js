@@ -3,6 +3,7 @@ const Channel = require('../models/Channel');
 const Message = require('../models/Message');
 const jwt = require('jsonwebtoken');
 const pubsub = require('../pubsub');
+const { withFilter } = require('apollo-server-express');
 
 const getIdUserAutenticated = req => {
     const { reactchat } = req.cookies;
@@ -123,7 +124,12 @@ const resolvers = {
     },
     Subscription: {
         newMessage: {
-            subscribe: () => pubsub.asyncIterator(['MESSAGE_SENT'])
+            subscribe: withFilter(
+                () => pubsub.asyncIterator(['MESSAGE_SENT']),
+                (payload, variables) => {
+                    return (payload.newMessage.channel == variables.channel)
+                }
+            )
         },
     },
 }
