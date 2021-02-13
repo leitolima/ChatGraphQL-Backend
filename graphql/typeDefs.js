@@ -52,6 +52,7 @@ const typeDefs = gql`
         createNewChannel(input: ChannelInput): Channel
         sendNewMessage(input: String, id: ID): Message
         joinToChannel(id: ID): Channel
+        goOutFromChannel(id: ID): Boolean
         addToFavorites(id: ID): Boolean
         deleteFromFavorites(id: ID): Boolean
     }

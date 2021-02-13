@@ -121,6 +121,15 @@ const resolvers = {
             user.save();
             return channel;
         },
+        goOutFromChannel: async (_, { id: channel_id }, { req }) => {
+            console.log('=> goOutFromChannel');
+            const id = getIdUserAutenticated(req);
+            var user = await User.findOne({_id: id});
+            const newArr = user.channels.filter(ch => ch != channel_id);
+            user.channels = newArr;
+            user.save();
+            return true;
+        },
         addToFavorites: async (_, { id: channel_id }, { req }) => {
             console.log('=> addToFavorites');
             const id = getIdUserAutenticated(req);
