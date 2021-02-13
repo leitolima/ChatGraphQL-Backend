@@ -17,7 +17,7 @@ const resolvers = {
             console.log('=> getUser');
             try{
                 const id = getIdUserAutenticated(req);
-                const user = await User.findById(id).populate('channels');
+                const user = await User.findById(id).populate('channels favorites');
                 return user;
             } catch (err){
                 throw new Error('Invalid token.');
@@ -47,7 +47,7 @@ const resolvers = {
         logIn: async (_, { input }, { res }) => {
             console.log('=> logIn');
             const { username, password } = input;
-            const auth = await User.findOne({ username }).populate('channels');
+            const auth = await User.findOne({ username }).populate('channels favorites');
             if(!auth){
                 throw new Error('Username or password incorrect.');
             }
@@ -120,7 +120,24 @@ const resolvers = {
             user.channels.push(channel._id);
             user.save();
             return channel;
-        }
+        },
+        addToFavorites: async (_, { id: channel_id }, { req }) => {
+            console.log('=> addToFavorites');
+            const id = getIdUserAutenticated(req);
+            var user = await User.findOne({_id: id});
+            user.favorites.push(channel_id);
+            user.save();
+            return true;
+        },
+        deleteFromFavorites: async (_, { id: channel_id }, { req }) => {
+            console.log('=> deleteFromFavorites');
+            const id = getIdUserAutenticated(req);
+            var user = await User.findOne({_id: id});
+            const newArr = user.favorites.filter(ch => ch != channel_id);
+            user.favorites = newArr;
+            user.save();
+            return true;
+        },
     },
     Subscription: {
         newMessage: {

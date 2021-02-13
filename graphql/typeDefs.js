@@ -9,6 +9,7 @@ const typeDefs = gql`
         username: String
         image: String,
         channels: [Channel]
+        favorites: [Channel]
     }
 
     type Message{
@@ -51,6 +52,8 @@ const typeDefs = gql`
         createNewChannel(input: ChannelInput): Channel
         sendNewMessage(input: String, id: ID): Message
         joinToChannel(id: ID): Channel
+        addToFavorites(id: ID): Boolean
+        deleteFromFavorites(id: ID): Boolean
     }
 
     type Subscription {

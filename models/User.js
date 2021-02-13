@@ -27,6 +27,11 @@ const UserSchema = new Schema({
         ref: 'channels',
         default: []
     }],
+    favorites: [{
+        type: Schema.Types.ObjectId,
+        ref: 'channels',
+        default: []
+    }],
     created: {
         type: Date,
         default: Date.now()     
