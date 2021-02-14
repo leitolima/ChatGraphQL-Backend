@@ -18,7 +18,7 @@ connectDB();
         : 'http://localhost:3000',  
 */
 const corsOptions = {
-    origin: '*',
+    origin: 'https://discord-clon.herokuapp.com',
     credentials: true, // <-- REQUIRED backend setting
 };
 
