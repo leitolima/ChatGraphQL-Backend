@@ -44,7 +44,7 @@ const resolvers = {
     },
 
     Mutation: {
-        logIn: async (_, { input }, { res }) => {
+        logIn: async (_, { input }, { req, res }) => {
             console.log('=> logIn');
             const { username, password } = input;
             const auth = await User.findOne({ username }).populate('channels favorites');
@@ -61,6 +61,7 @@ const resolvers = {
                 secure: process.env.NODE_ENV === "production",
                 maxAge: 1000 * 60 * 60 * 24 // 1 day
             })
+            console.log(req.cookies);
             return auth;
         },
         createNewUser: async (_, { input }, { res }) => {

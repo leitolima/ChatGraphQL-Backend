@@ -21,6 +21,7 @@ const corsOptions = {
 };
 
 //Middlewares
+app.set('trust proxy', 1);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 // app.use((req, res, next) => {
