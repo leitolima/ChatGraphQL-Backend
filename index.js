@@ -12,18 +12,15 @@ require('dotenv').config();
 
 const app = express();
 connectDB();
-/*
-    origin: process.env.NODE_ENV == 'production' 
-        ? process.env.APP_URL 
-        : 'http://localhost:3000',  
-*/
+console.log('NODE_ENV: ' + process.env.NODE_ENV);
 const corsOptions = {
-    origin: 'https://discord-clon.herokuapp.com',
+    origin: process.env.NODE_ENV == 'production'
+        ? 'https://discord-clon.herokuapp.com' 
+        : 'http://localhost:3000', 
     credentials: true, // <-- REQUIRED backend setting
 };
 
 //Middlewares
-app.set('trust proxy', 1);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 // app.use((req, res, next) => {
@@ -43,7 +40,7 @@ const server = new ApolloServer({
     context: req => ({ ...req }),
 });
 
-server.applyMiddleware({app, path: '/graphql', cors: true});
+server.applyMiddleware({app, path: '/graphql'});
 
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
