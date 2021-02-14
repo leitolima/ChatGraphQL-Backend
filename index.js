@@ -12,12 +12,14 @@ require('dotenv').config();
 
 const app = express();
 connectDB();
-
-const corsOptions = {
+/*
     origin: process.env.NODE_ENV == 'production' 
         ? process.env.APP_URL 
-        : 'http://localhost:3000',
-    credentials: true // <-- REQUIRED backend setting
+        : 'http://localhost:3000',  
+*/
+const corsOptions = {
+    origin: '*',
+    credentials: true, // <-- REQUIRED backend setting
 };
 
 //Middlewares
