@@ -12,7 +12,7 @@ require('dotenv').config();
 
 const app = express();
 connectDB();
-console.log('NODE_ENV: ' + process.env.NODE_ENV);
+
 const corsOptions = {
     origin: process.env.NODE_ENV == 'production'
         ? 'https://discord-clon.herokuapp.com' 
@@ -37,7 +37,13 @@ app.use(cookieParser());
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: req => ({ ...req }),
+    context: ({ req, res }) => { 
+        const head =  process.env.NODE_ENV == 'production'
+        ? 'https://discord-clon.herokuapp.com' 
+        : 'http://localhost:3000';
+        res.setHeader('Access-Control-Allow-Origin', head);
+        return { ...req, ...res } 
+    },
 });
 
 server.applyMiddleware({app, path: '/graphql'});
